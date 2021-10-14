@@ -8,7 +8,10 @@ void show_get_put_char(my_str_t *str);
 void show_inserts(my_str_t *str, my_str_t *str2);
 void show_appends(my_str_t *str, my_str_t *str2);
 void show_find(my_str_t *str);
-void show_read_files();
+void show_read_write_files();
+void show_substr(my_str_t* str);
+void show_cmp(my_str_t* str);
+void show_other(my_str_t* str);
 
 int pred(int sym);
 
@@ -35,7 +38,15 @@ int main() {
     show_inserts(&str, &str2);
     show_appends(&str, &str2);
     show_find(&str);
-    show_read_files();
+
+    // the same works with read from stdin, though it is not showed here
+    // as there is the requirement not to have anything that requires user
+    // input
+    show_read_write_files();
+
+    show_substr(&str);
+    show_cmp(&str);
+    show_other(&str);
 
     my_str_free(&str);
 }
@@ -104,12 +115,88 @@ int pred(int sym) {
     return 0;
 }
 
-void show_read_files() {
+
+void show_read_write_files() {
+    printf("------------ show read write to file ----------------\n");
+    // create a string to write to file
     my_str_t test_file = {0};
     my_str_create(&test_file, 0);
+    my_str_from_cstr(&test_file, "Hello there, this shows the write file func", 0);
 
-    FILE *file_to_read = fopen("test.txt", "r");
-    int err = my_str_read_file(&test_file, file_to_read);
-    printf("%d\n", err);
-    printf("Read test file: %s\n", my_str_get_cstr(&test_file));
+    // opens the file and writes to it
+    FILE *file_to_read = fopen("../test_files/test2.txt", "w");
+    my_str_write_file(&test_file, file_to_read);
+    printf("String: \"%s\" was written to the file", my_str_get_cstr(&test_file));
+
+    // closes it so open it for reading later on
+    fclose(file_to_read);
+
+    // reads from the file and outputs it to the stdout
+    my_str_t test_file2 = {0};
+    my_str_create(&test_file2, 0);
+    file_to_read = fopen("../test_files/test2.txt", "r");
+    my_str_read_file(&test_file2, file_to_read);
+    printf("Read test file that was written to: %s\n", my_str_get_cstr(&test_file2));
+
+    // read file delimi example
+    my_str_t test_file3 = {0};
+    my_str_create(&test_file3, 0);
+    my_str_read_file_delim(&test_file3, file_to_read, 'i');
+    printf("Read the file up to delim, that is in this case 'i': %s\n", my_str_get_cstr(&test_file3));
+
+    fclose(file_to_read);
+
+    printf("The next message is the example of write to the stdout\n");
+    my_str_write(&test_file2);
+    printf("\n\n");
+}
+
+void show_substr(my_str_t* str){
+    printf("------------ Show substr ---------------------\n");
+    my_str_t str_test;
+    my_str_create(&str_test, 0);
+
+    printf("Initiali string: %s\n", my_str_get_cstr(str));
+    my_str_substr(str, &str_test, 0, 2);
+    printf("Substr of str (from 0 to 2, my_str_substr is used): %s\n", my_str_get_cstr(&str_test));
+    char to[3];
+    my_str_substr_cstr(&str_test, to, 0, 2);
+    to[2] = '\0';
+    printf("Cstr substr of str: %s\n\n", to);
+    my_str_free(&str_test);
+}
+
+void show_cmp(my_str_t* str){
+    printf("------------ Show cmp ---------------------\n");
+    my_str_t str_test;
+    my_str_create(&str_test, 0);
+    my_str_from_cstr(&str_test, "sdhfdsannjdhv", 0);
+    printf("Cmp with my_str: %d\n", my_str_cmp(str, &str_test));
+    printf("String: %s; my_str: %s\n", my_str_get_cstr(str), my_str_get_cstr(&str_test));
+    printf("Cmp with cstr: %d\n", my_str_cmp_cstr(str, "dksbhgslsajdhj"));
+    printf("String: %s; my_str: %s\n", my_str_get_cstr(str), "dksbhgslsajdhj");
+    printf("Cmp with another cstr: %d\n\n", my_str_cmp_cstr(str, "omg"));
+    printf("String: %s; my_str: %s\n", my_str_get_cstr(str), "omg");
+    my_str_free(&str_test);
+}
+
+void show_other(my_str_t* str){
+    printf("------------ Show other ---------------------\n");
+    printf("String before popback: %s\n", my_str_get_cstr(str));
+    my_str_popback(str);
+    printf("String after popback: %s\n", my_str_get_cstr(str));
+    printf("Capacity before reserve: %zu\n", str->capacity_m);
+    my_str_reserve(str, 2*str->capacity_m);
+    printf("Capacity after reserve: %zu\n", str->capacity_m);
+    printf("My str before resize: %s\n", my_str_get_cstr(str));
+    my_str_resize(str, 80, '0');
+    printf("My str after resize: %s\n", my_str_get_cstr(str));
+    printf("Capacity before shrink to fit: %zu\n", str->capacity_m);
+    my_str_shrink_to_fit(str);
+    printf("Capacity after shrink to fit: %zu\n", str->capacity_m);
+
+    printf("\nNote here that string is filled with zeroes after the resize");
+    printf("My str before erase: %s\n", my_str_get_cstr(str));
+    my_str_erase(str, 10, 70);
+    printf("My str after erase: %s\n\n", my_str_get_cstr(str));
 }
