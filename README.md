@@ -14,7 +14,7 @@
 
 ### Results
 
-<mark> Tested and efficient strings library implementatioon </mark>
+<mark> Tested and efficient strings library implementatioon, the majority of code is covered with tests, checked by valgrind for memory leaks, as well as different compilers (clang and gcc) with the max level of warnings; pvs studio and sanitisers to ensure the quality of code </mark>
 
 ### Example of execution:
 if you compile and run the main file along with the lib, you will get the following example of execution.
