@@ -48,7 +48,9 @@ int main() {
     show_cmp(&str);
     show_other(&str);
 
+    my_str_free(&str2);
     my_str_free(&str);
+    
 }
 
 void show_default_funcion(my_str_t *str) {
@@ -149,6 +151,10 @@ void show_read_write_files() {
     printf("The next message is the example of write to the stdout\n");
     my_str_write(&test_file2);
     printf("\n\n");
+
+    my_str_free(&test_file);
+    my_str_free(&test_file2);
+    my_str_free(&test_file3);
 }
 
 void show_substr(my_str_t* str){

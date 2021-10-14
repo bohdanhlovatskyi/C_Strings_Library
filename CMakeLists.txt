@@ -8,7 +8,7 @@ set(LIBN my_c_string)
 
 # Options
 set (WARNINGS_AS_ERRORS ON)
-set (ENABLE_PVS_STUDIO OFF)
+set (ENABLE_PVS_STUDIO ON)
 
 #####################################################################################################
 # 1) set up gtests. This block of code is taken from https://crascit.com/2015/07/25/cmake-gtest/

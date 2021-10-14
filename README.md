@@ -9,8 +9,7 @@
 ```
 ./compile.sh
 
-// this will execte the main file with example of usage of the library
-./bin/test_c_str 
+./bin/gtester // this will run the tests
 ```
 
 ### Results
@@ -18,6 +17,7 @@
 <mark> Tested and efficient strings library implementatioon </mark>
 
 ### Example of execution:
+if you compile and run the main file along with the lib, you will get the following example of execution.
 ```
 --------------- Show default funcs -------------------
 String from cstr: Hello there!
